@@ -13,6 +13,7 @@ func main() {
 	myChan := make(chan int)
 	go addNum(myChan)
 	fmt.Println(<-myChan)
+
 }
 
 func playA() {
