@@ -2,18 +2,20 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
-	//go playA()
-	//go playB()
-	//time.Sleep(1 * time.Second)
-	//fmt.Println("执行完毕")
+	go playA()
+	go playB()
+	time.Sleep(1 * time.Second)
+	fmt.Println("执行完毕")
 
 	myChan := make(chan int)
 	go addNum(myChan)
 	fmt.Println(<-myChan)
 
+	channelPlay()
 }
 
 func playA() {
