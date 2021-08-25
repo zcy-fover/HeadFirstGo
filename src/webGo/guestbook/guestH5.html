@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>留言板</title>
+</head>
+<body>
+
+<div>
+    {{.SignatureCount}} 条留言<a href="/guestbook/addView">添加留言</a>
+</div>
+<div>
+    {{range .Signatures}}
+        <p>{{.}}</p>
+    {{end}}
+</div>
+</body>
+</html>
