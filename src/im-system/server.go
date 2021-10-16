@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"sync"
 )
@@ -39,6 +40,26 @@ func (server *Server) Handler(conn net.Conn) {
 
 	//广播当前用户的上线消息
 	server.BroadCast(user, "已上线")
+
+	//接受客户端传递过来的消息，将其广播出去
+	go func() {
+		buf := make([]byte, 4096)
+		for {
+			//从链接中 读取消息
+			n, err := conn.Read(buf)
+			if n == 0 {
+				server.BroadCast(user, "下线")
+				return
+			}
+			if err != nil && err != io.EOF {
+				fmt.Println("conn  read err: ", err)
+				return
+			}
+			msg := string(buf[:n-1])
+			server.BroadCast(user, msg)
+		}
+	}()
+
 	//将当前 go 程阻塞
 	select {}
 }
@@ -72,6 +93,7 @@ func (server *Server) Start() {
 	defer listener.Close()
 	//启动监听  message channel 的 go  程
 	go server.ListenMessage()
+
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
